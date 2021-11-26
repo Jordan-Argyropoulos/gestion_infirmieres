@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Hôte : 127.0.0.1:3306
--- Généré le : mer. 24 nov. 2021 à 12:58
+-- Généré le : ven. 26 nov. 2021 à 18:23
 -- Version du serveur :  5.7.31
 -- Version de PHP : 7.4.9
 
@@ -20,6 +20,21 @@ SET time_zone = "+00:00";
 --
 -- Base de données : `gestion_infirmieres`
 --
+
+-- --------------------------------------------------------
+
+--
+-- Structure de la table `adresse`
+--
+
+DROP TABLE IF EXISTS `adresse`;
+CREATE TABLE IF NOT EXISTS `adresse` (
+  `id_adresse` int(11) NOT NULL,
+  `rue` varchar(100) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `ville` varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `code_postal` int(4) NOT NULL,
+  PRIMARY KEY (`id_adresse`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------
 
@@ -78,10 +93,12 @@ CREATE TABLE IF NOT EXISTS `infirmieres` (
   `numero_inami` int(11) NOT NULL,
   `nom` varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL,
   `prenom` varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `adresse` varchar(120) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `adresse_mail` varchar(100) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `adresse_mail` varchar(100) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `mot_de_passe` varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL,
   `numero_telephone` int(20) NOT NULL,
-  PRIMARY KEY (`numero_inami`)
+  `id_adresse` int(11) NOT NULL,
+  PRIMARY KEY (`numero_inami`),
+  KEY `id_adresse` (`id_adresse`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------
@@ -95,11 +112,12 @@ CREATE TABLE IF NOT EXISTS `kine` (
   `nn_inami` int(11) NOT NULL,
   `nom` varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL,
   `prenom` varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `adresse` varchar(100) COLLATE utf8mb4_unicode_ci NOT NULL,
   `numero_telephone` int(15) NOT NULL,
   `nn_patient` int(11) NOT NULL,
+  `id_adresse` int(11) NOT NULL,
   PRIMARY KEY (`nn_inami`),
-  KEY `nn_patient` (`nn_patient`)
+  KEY `nn_patient` (`nn_patient`),
+  KEY `id_adresse` (`id_adresse`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------
@@ -113,9 +131,10 @@ CREATE TABLE IF NOT EXISTS `medecin` (
   `nn_inami` int(11) NOT NULL,
   `nom` varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL,
   `prenom` varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `adresse` varchar(100) COLLATE utf8mb4_unicode_ci NOT NULL,
   `numero_telephone` int(15) NOT NULL,
-  PRIMARY KEY (`nn_inami`)
+  `id_adresse` int(11) NOT NULL,
+  PRIMARY KEY (`nn_inami`),
+  KEY `id_adresse` (`id_adresse`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------
@@ -128,10 +147,11 @@ DROP TABLE IF EXISTS `mutuelles`;
 CREATE TABLE IF NOT EXISTS `mutuelles` (
   `numero_mutuelle` int(11) NOT NULL,
   `nom` varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `siege_social` varchar(100) COLLATE utf8mb4_unicode_ci NOT NULL,
   `nn_patient` int(11) NOT NULL,
+  `id_adresse` int(11) NOT NULL,
   PRIMARY KEY (`numero_mutuelle`),
-  KEY `nn_patient` (`nn_patient`)
+  KEY `nn_patient` (`nn_patient`),
+  KEY `id_adresse` (`id_adresse`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------
@@ -175,10 +195,11 @@ CREATE TABLE IF NOT EXISTS `patient` (
   `nn_patient` int(11) NOT NULL,
   `nom` varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL,
   `prenom` varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `adresse` varchar(100) COLLATE utf8mb4_unicode_ci NOT NULL,
   `numero_telephone` int(15) NOT NULL,
   `nn_perso_contact` int(11) NOT NULL,
-  PRIMARY KEY (`nn_patient`)
+  `id_adresse` int(11) NOT NULL,
+  PRIMARY KEY (`nn_patient`),
+  KEY `id_adresse` (`id_adresse`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------
@@ -263,16 +284,24 @@ ALTER TABLE `fiche_de_soin`
   ADD CONSTRAINT `fiche_de_soin_ibfk_3` FOREIGN KEY (`id_tournees`) REFERENCES `tournees` (`id_tournees`);
 
 --
+-- Contraintes pour la table `infirmieres`
+--
+ALTER TABLE `infirmieres`
+  ADD CONSTRAINT `infirmieres_ibfk_1` FOREIGN KEY (`id_adresse`) REFERENCES `adresse` (`id_adresse`);
+
+--
 -- Contraintes pour la table `kine`
 --
 ALTER TABLE `kine`
-  ADD CONSTRAINT `kine_ibfk_1` FOREIGN KEY (`nn_patient`) REFERENCES `patient` (`nn_patient`);
+  ADD CONSTRAINT `kine_ibfk_1` FOREIGN KEY (`nn_patient`) REFERENCES `patient` (`nn_patient`),
+  ADD CONSTRAINT `kine_ibfk_2` FOREIGN KEY (`id_adresse`) REFERENCES `adresse` (`id_adresse`);
 
 --
 -- Contraintes pour la table `mutuelles`
 --
 ALTER TABLE `mutuelles`
-  ADD CONSTRAINT `mutuelles_ibfk_1` FOREIGN KEY (`nn_patient`) REFERENCES `patient` (`nn_patient`);
+  ADD CONSTRAINT `mutuelles_ibfk_1` FOREIGN KEY (`nn_patient`) REFERENCES `patient` (`nn_patient`),
+  ADD CONSTRAINT `mutuelles_ibfk_2` FOREIGN KEY (`id_adresse`) REFERENCES `adresse` (`id_adresse`);
 
 --
 -- Contraintes pour la table `numero_tournee`
@@ -286,6 +315,12 @@ ALTER TABLE `numero_tournee`
 --
 ALTER TABLE `passages`
   ADD CONSTRAINT `passages_ibfk_1` FOREIGN KEY (`id_tournees`) REFERENCES `tournees` (`id_tournees`);
+
+--
+-- Contraintes pour la table `patient`
+--
+ALTER TABLE `patient`
+  ADD CONSTRAINT `patient_ibfk_1` FOREIGN KEY (`id_adresse`) REFERENCES `adresse` (`id_adresse`);
 
 --
 -- Contraintes pour la table `prescription`
