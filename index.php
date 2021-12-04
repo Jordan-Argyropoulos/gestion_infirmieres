@@ -4,11 +4,19 @@
   <meta charset="utf-8">
   <title>Registration</title>
   <link rel="stylesheet" href="css/styles.css" />
+  <link href="./php/calendar/calendar.css" type="text/css" rel="stylesheet" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
   <script src="./js/common.js" type="text/javascript"></script>
   <script src="./js/script.js" type="text/javascript"></script>
 </head>
 <body>
+    <?php
+    include './php/calendar/calendar.php';
+
+    $calendar = new Calendar();
+
+    echo $calendar->show();
+    ?>
   <div>
     <div id="scr_login">
 
