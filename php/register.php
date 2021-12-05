@@ -49,7 +49,6 @@
       else{
          $ins=$pdo->prepare("INSERT into adresse(rue,ville,code_postal) values(?,?,?)");
          if($ins->execute(array($rue,$ville,$code_postal)))
-            header("location:./../index.php");
 
          $ins=$pdo->prepare("INSERT into infirmieres(numero_inami,nom,prenom,adresse_mail,password,password_confirm,numero_telephone) values(?,?,?,?,?,?,?)");
          if($ins->execute(array($numero_inami,$nom,$prenom,$adresse_mail,$pass,$repass,$numero_telephone)))
