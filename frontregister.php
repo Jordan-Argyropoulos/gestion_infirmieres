@@ -4,7 +4,7 @@
 		<title><?= $titre ?></title>
 		<link rel="stylesheet" href="css/styles.css" />
       <script src="./js/common.js" type="text/javascript"></script>
-      <script src="./js/script_register.js" type="text/javascript"></script>
+      <!--<script src="./js/script_register.js" type="text/javascript"></script>-->
 	</head>
 	<body>
 <!-- faudra certainement adapter avec la table adresse -->

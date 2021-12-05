@@ -9,8 +9,8 @@
         var mdp = document.getElementById("password").value; // tu récupères la valeur du mdp
         var longueur = mdp.lenght; // tu récupères la longueur
         // si la longueur n'est pas bonne tu affiches le message
-        if(longueur <= 4 || longueur > 255) {
-            return false;
+        if(longueur >= 4 || longueur < 255) {
+            //return false;
     }
 }
 
